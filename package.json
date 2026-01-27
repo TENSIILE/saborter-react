@@ -1,0 +1,61 @@
+{
+  "name": "@saborter/react",
+  "version": "1.0.0",
+  "description": "A library for canceling asynchronous requests with React integration",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "author": "Laptev Vladislav",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TENSIILE/saborter-react.git"
+  },
+  "keywords": [
+    "react",
+    "ts",
+    "abort",
+    "simple",
+    "signal",
+    "controller",
+    "javascript",
+    "typescript",
+    "abortsignal",
+    "abortcontroller",
+    "javascript-library",
+    "typescript-library"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "build": "npm run clean:dist && tsc && vite build",
+    "clean:dist": "rimraf dist",
+    "typecheck": "tsc --pretty --noEmit --skipLibCheck",
+    "verify:prettier": "npx prettier . --check",
+    "verify:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --max-warnings=0",
+    "verify": "npm run typecheck && npm run verify:prettier && npm run verify:eslint",
+    "fix:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --fix",
+    "fix:prettier": "npx prettier --write .",
+    "fix": "npm run fix:eslint && npm run fix:prettier"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "saborter": "^1.4.2"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "react": ">=17.0.0 <20.0.0",
+    "react-dom": ">=17.0.0 <20.0.0",
+    "saborter": "^1.4.2"
+  }
+}
