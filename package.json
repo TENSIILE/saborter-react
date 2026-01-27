@@ -45,7 +45,8 @@
     "verify": "npm run typecheck && npm run verify:prettier && npm run verify:eslint",
     "fix:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --fix",
     "fix:prettier": "npx prettier --write .",
-    "fix": "npm run fix:eslint && npm run fix:prettier"
+    "fix": "npm run fix:eslint && npm run fix:prettier",
+    "prepare": "husky"
   },
   "dependencies": {
     "react": ">=17.0.0 <20.0.0",
@@ -63,6 +64,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
     "rimraf": "^6.1.2",
     "ts-node": "^10.9.2",
@@ -74,5 +77,13 @@
   "peerDependencies": {
     "react": ">=17.0.0 <20.0.0",
     "saborter": "^1.4.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npm run fix:prettier"
+    ],
+    "*.{json,md}": [
+      "npm run fix:prettier"
+    ]
   }
 }
