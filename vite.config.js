@@ -8,11 +8,11 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       rollupTypes: true,
-      bundledPackages: [],
+      bundledPackages: []
     }),
     circularDependency({
       circleImportThrowErr: true,
-      formatOut: data => {
+      formatOut: (data) => {
         if (!Object.entries(data).length) return {};
 
         // eslint-disable-next-line no-console
@@ -22,7 +22,7 @@ export default defineConfig({
           if (Array.isArray(dependencies)) {
             const message = dependencies
               .flat()
-              .map(dependency => join(__dirname, dependency))
+              .map((dependency) => join(__dirname, dependency))
               .concat(join(__dirname, key))
               .join('\n\r => ');
 
@@ -32,29 +32,29 @@ export default defineConfig({
         });
 
         throw new Error('Has circle dependency!');
-      },
-    }),
+      }
+    })
   ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       formats: ['es', 'cjs'],
-      fileName: format => {
+      fileName: (format) => {
         if (format === 'es') return 'index.es.js';
         if (format === 'cjs') return 'index.cjs.js';
 
         return `index.${format}.js`;
-      },
+      }
     },
     rollupOptions: {
       external: [],
       output: {
         preserveModules: false,
-        globals: {},
-      },
+        globals: {}
+      }
     },
     sourcemap: false,
     minify: false,
-    target: 'es2020',
-  },
+    target: 'es2020'
+  }
 });
