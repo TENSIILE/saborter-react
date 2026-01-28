@@ -179,7 +179,7 @@ const Component = () => {
       const user = await aborter.try((signal) => fetch('/api/user', { signal }));
     } catch (error) {
       if (error instanceof AbortError) {
-        console.error('Abort error initiator:', error.initiator); // 'unmounted';
+        console.error('Abort error initiator:', error.initiator); // 'unmounted-component';
       }
     }
   };
