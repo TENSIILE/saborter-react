@@ -1,6 +1,6 @@
 ![Logo](./assets/logo.png)
 
-[![Npm package](https://img.shields.io/npm/v/saborter?color=red&label=npm%20package)](https://www.npmjs.com/package/saborter-react)
+[![Npm package](https://img.shields.io/npm/v/saborter-react?color=red&label=npm%20package)](https://www.npmjs.com/package/saborter-react)
 [![Licence](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 [![Github](https://img.shields.io/badge/repository-github-color)](https://github.com/TENSIILE/saborter-react)
 
