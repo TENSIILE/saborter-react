@@ -6,19 +6,12 @@
     "airbnb",
     "plugin:react/recommended",
     "plugin:import/typescript",
+    "plugin:import/recommended",
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": [
-    "**/dist/",
-    "**/node_modules/",
-    "**/*.json",
-    "**/*.html",
-    "/**/coverage/",
-    "**/integrations/**/",
-    "./vite.config.js"
-  ],
-  "plugins": ["@typescript-eslint", "prettier", "react", "react-hooks"],
+  "ignorePatterns": ["**/dist/", "**/node_modules/", "**/*.json", "**/*.html", "/**/coverage/", "./vite.config.js"],
+  "plugins": ["@typescript-eslint", "prettier", "react", "react-hooks", "import"],
   "rules": {
     "no-continue": "off",
     "quotes": "off",
@@ -58,14 +51,21 @@
     }
   ],
   "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+
     "import/resolver": {
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"],
         "moduleDirectory": ["node_modules", "src/"]
       },
       "typescript": {
+        "alwaysTryTypes": true,
         "project": "./tsconfig.json"
       }
-    }
+    },
+
+    "import/extensions": [".js", ".jsx", ".ts", ".tsx"]
   }
 }
