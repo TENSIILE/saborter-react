@@ -56,5 +56,16 @@
         "no-undef": "off"
       }
     }
-  ]
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/"]
+      },
+      "typescript": {
+        "project": "./tsconfig.json"
+      }
+    }
+  }
 }

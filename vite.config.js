@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { join, resolve } from 'path';
 import circularDependency from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [
+    react({ jsxRuntime: 'automatic' }),
     dts({
       insertTypesEntry: true,
       rollupTypes: true,
@@ -47,14 +49,18 @@ export default defineConfig({
       }
     },
     rollupOptions: {
-      external: [],
+      external: ['react', 'react-dom', 'react/jsx-runtime'],
       output: {
         preserveModules: false,
-        globals: {}
+        preserveModulesRoot: 'src',
+        globals: {
+          react: 'React'
+        }
       }
     },
     sourcemap: false,
     minify: false,
-    target: 'es2020'
+    target: 'es2020',
+    copyPublicDir: false
   }
 });
