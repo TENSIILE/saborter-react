@@ -1,7 +1,7 @@
 ![Logo](./assets/logo.png)
 
 [![Npm package](https://img.shields.io/npm/v/saborter-react?color=red&label=npm%20package)](https://www.npmjs.com/package/saborter-react)
-[![Licence](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 [![Github](https://img.shields.io/badge/repository-github-color)](https://github.com/TENSIILE/saborter-react)
 
 A library for canceling asynchronous requests that combines the `Saborter` library and `React`.
@@ -15,7 +15,7 @@ The documentation is divided into several sections:
 - [Quick Start](#🚀-quick-start)
 - [API](#🔧-api)
 - [Usage Examples](#🎯-usage-examples)
-- [Licence](#📄-licence)
+- [License](#📄-license)
 
 ## 📦 Installation
 
@@ -179,13 +179,13 @@ const Component = () => {
       const user = await aborter.try((signal) => fetch('/api/user', { signal }));
     } catch (error) {
       if (error instanceof AbortError) {
-        console.error('Abort error initiator:', error.initiator); // 'unmounted-component';
+        console.error('Abort error initiator:', error.initiator); // 'component-unmounted';
       }
     }
   };
 };
 ```
 
-## 📋 Licence
+## 📋 License
 
 MIT License - see [LICENSE](./LICENSE) for details.
