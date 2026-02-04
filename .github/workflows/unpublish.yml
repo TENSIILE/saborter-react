@@ -20,10 +20,10 @@ jobs:
       - run: |
           if [ "${{ github.event.inputs.version }}" == "all" ]; then
             echo "Attempting to unpublish entire package"
-            npm unpublish @saborter/react --force || echo "Failed to unpublish"
+            npm unpublish saborter-react --force || echo "Failed to unpublish"
           else
             echo "Unpublishing version ${{ github.event.inputs.version }}"
-            npm unpublish @saborter/react@${{ github.event.inputs.version }} || echo "Failed to unpublish"
+            npm unpublish saborter-react@${{ github.event.inputs.version }} || echo "Failed to unpublish"
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

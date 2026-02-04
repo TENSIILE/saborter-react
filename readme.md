@@ -20,9 +20,9 @@ The documentation is divided into several sections:
 ## 📦 Installation
 
 ```bash
-npm install @saborter/react
+npm install saborter-react
 # or
-yarn add @saborter/react
+yarn add saborter-react
 ```
 
 ## 📖 Possibilities
@@ -36,7 +36,7 @@ yarn add @saborter/react
 ### Basic Usage
 
 ```javascript
-import { useAborter } from '@saborter/react';
+import { useAborter } from 'saborter-react';
 
 const Component = () => {
   // Create an Aborter instance via the hook
@@ -133,7 +133,7 @@ console.log(requestState); // cancelled / pending / fulfilled / rejected / abort
 ```javascript
 import { useState } from 'react';
 import { AbortError } from 'saborter';
-import { useAborter } from '@saborter/react';
+import { useAborter } from 'saborter-react';
 
 const Component = () => {
   const [user, setUser] = useState(null);
@@ -169,7 +169,7 @@ const Component = () => {
 
 ```javascript
 import { AbortError } from 'saborter';
-import { useAborter } from '@saborter/react';
+import { useAborter } from 'saborter-react';
 
 const Component = () => {
   const { aborter } = useAborter();
