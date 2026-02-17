@@ -5,12 +5,12 @@ import * as Constants from './use-aborter.constants';
 import * as Types from './use-aborter.types';
 
 export const useAborter = (props: Types.UseAborterProps = {}): Types.UseAborterResult => {
-  const { onAbort, onStateChange, isDisposeEnabled = true } = props;
+  const { onAbort, onStateChange, dispose = true } = props;
 
   const aborterRef = useRef(new Aborter({ onAbort, onStateChange }));
   const [requestState, setRequestState] = useState<RequestState | null>(null);
 
-  const isDisposeEnabledRef = Shared.Hooks.useMutableRef(isDisposeEnabled);
+  const isDisposeEnabledRef = Shared.Hooks.useMutableRef(dispose);
 
   useEffect(() => {
     const currentAborter = aborterRef.current;
