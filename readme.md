@@ -1,8 +1,8 @@
 ![Logo](./assets/logo.png)
 
-[![Npm package](https://img.shields.io/npm/v/saborter-react?color=red&label=npm%20package)](https://www.npmjs.com/package/saborter-react)
+[![Npm package](https://img.shields.io/npm/v/@saborter/react?color=red&label=npm%20package)](https://www.npmjs.com/package/@saborter/react)
 [![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
-[![Github](https://img.shields.io/badge/repository-github-color)](https://github.com/TENSIILE/saborter-react)
+[![Github](https://img.shields.io/badge/repository-github-color)](https://github.com/TENSIILE/@saborter/react)
 
 A library for canceling asynchronous requests that combines the `Saborter` library and `React`.
 
@@ -20,9 +20,9 @@ The documentation is divided into several sections:
 ## 📦 Installation
 
 ```bash
-npm install saborter-react
+npm install @saborter/react
 # or
-yarn add saborter-react
+yarn add @saborter/react
 ```
 
 ## 📖 Possibilities
@@ -36,7 +36,7 @@ yarn add saborter-react
 ### Basic Usage
 
 ```javascript
-import { useAborter } from 'saborter-react';
+import { useAborter } from '@saborter/react';
 
 const Component = () => {
   // Create an Aborter instance via the hook
@@ -93,7 +93,7 @@ const { aborter } = new useAborter(props?: UseAborterProps);
     This includes unsubscribing, clearing fields, and removing references to passed callback functions.
     @default true
   */
-  isDisposeEnabled?: boolean;
+  dispose?: boolean;
 }
 ```
 
@@ -123,7 +123,7 @@ The field is a `react` state associated with the `aborter.listeners.state.value`
 ```javascript
 const { requestState } = useAborter();
 
-console.log(requestState); // cancelled / pending / fulfilled / rejected / aborted
+console.log(requestState); // 'cancelled' / 'pending' / 'fulfilled' / 'rejected' / 'aborted'
 ```
 
 ## 🎯 Usage Examples
@@ -133,7 +133,7 @@ console.log(requestState); // cancelled / pending / fulfilled / rejected / abort
 ```javascript
 import { useState } from 'react';
 import { AbortError } from 'saborter';
-import { useAborter } from 'saborter-react';
+import { useAborter } from '@saborter/react';
 
 const Component = () => {
   const [user, setUser] = useState(null);
@@ -146,9 +146,7 @@ const Component = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-
       const user = await aborter.try((signal) => fetch('/api/user', { signal }));
-
       setUser(user);
     } catch (error) {
       if (error instanceof AbortError) {
@@ -169,7 +167,7 @@ const Component = () => {
 
 ```javascript
 import { AbortError } from 'saborter';
-import { useAborter } from 'saborter-react';
+import { useAborter } from '@saborter/react';
 
 const Component = () => {
   const { aborter } = useAborter();
