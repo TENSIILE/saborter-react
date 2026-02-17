@@ -39,7 +39,7 @@ export interface UseAborterProps {
     This includes unsubscribing, clearing fields, and removing references to passed callback functions.
     @default true
   */
-  isDisposeEnabled?: boolean;
+  dispose?: boolean;
 }
 
 /**
