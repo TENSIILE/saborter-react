@@ -1,4 +1,5 @@
-import { Aborter, OnAbortCallback, OnStateChangeCallback, RequestState, AbortInitiator as Initiator } from 'saborter';
+import { Aborter } from 'saborter';
+import { OnAbortCallback, OnStateChangeCallback, RequestState, AbortInitiator as Initiator } from 'saborter/types';
 import { ABORTABLE_UNMOUNTED_INITIATOR } from './use-aborter.constants';
 
 export interface UseAborterResult {

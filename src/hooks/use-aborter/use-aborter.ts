@@ -1,5 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
-import { Aborter, RequestState, AbortError } from 'saborter';
+import { Aborter } from 'saborter';
+import { AbortError } from 'saborter/errors';
+import { RequestState } from 'saborter/types';
+import { dispose as disposeFn } from 'saborter/lib';
 import * as Shared from '../../shared';
 import * as Constants from './use-aborter.constants';
 import * as Types from './use-aborter.types';
@@ -7,7 +10,7 @@ import * as Types from './use-aborter.types';
 export const useAborter = (props: Types.UseAborterProps = {}): Types.UseAborterResult => {
   const { onAbort, onStateChange, dispose = true } = props;
 
-  const aborterRef = useRef(new Aborter({ onAbort, onStateChange }));
+  const aborterRef = useRef(new Aborter({ onAbort: onAbort as any, onStateChange }));
   const [requestState, setRequestState] = useState<RequestState | null>(null);
 
   const isDisposeEnabledRef = Shared.Hooks.useMutableRef(dispose);
@@ -27,7 +30,7 @@ export const useAborter = (props: Types.UseAborterProps = {}): Types.UseAborterR
         })
       );
       if (isDisposeEnabledCurrent) {
-        currentAborter.dispose();
+        disposeFn(currentAborter);
       }
     };
   }, [isDisposeEnabledRef]);
