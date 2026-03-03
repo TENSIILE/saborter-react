@@ -135,6 +135,63 @@ const { requestState } = useAborter();
 console.log(requestState); // 'cancelled' / 'pending' / 'fulfilled' / 'rejected' / 'aborted'
 ```
 
+### `useReusableAborter`
+
+#### Props
+
+```typescript
+// The type can be found in `saborter/types`
+const reusableAborter = new useReusableAborter(props?: ReusableAborterProps);
+```
+
+#### Props Parameters
+
+| Parameter | Type                   | Description                           | Required |
+| --------- | ---------------------- | ------------------------------------- | -------- |
+| `props`   | `ReusableAborterProps` | ReusableAborter configuration options | No       |
+
+**ReusableAborterProps:**
+
+```typescript
+{
+  /**
+     * Determines which listeners are carried over when the abort signal is reset.
+     * - If `true`, all listeners (both `onabort` and event listeners) are preserved.
+     * - If `false`, no listeners are preserved.
+     * - If an object, specific listener types can be enabled/disabled individually.
+     */
+    attractListeners?: boolean | AttractListeners;
+}
+```
+
+#### Properties
+
+`signal: AbortSignal`
+
+Returns the `AbortSignal` associated with the current controller.
+
+```javascript
+const reusableAborter = useReusableAborter();
+
+// Using signal in the request
+fetch('/api/data', {
+  signal: reusableAborter.signal
+});
+```
+
+#### Methods
+
+`abort(reason?): void`
+
+**Parameters:**
+
+- `reason?: any` - the reason for aborting the request.
+
+Immediately cancels the currently executing request.
+
+> [!NOTE]
+> Can be called multiple times. Each call will restore the `signal`, and the `aborted` property will always be `false`.
+
 ## 🎯 Usage Examples
 
 ### Basic Usage
@@ -172,7 +229,7 @@ const Component = () => {
 };
 ```
 
-### The `AbortError` `initiator` changed while unmounting the component.
+### The `AbortError` `initiator` changed while unmounting the component
 
 ```javascript
 import { AbortError } from 'saborter';
@@ -191,6 +248,39 @@ const Component = () => {
     }
   };
 };
+```
+
+### Using `useReusableAborter`
+
+```typescript
+const aborter = new useReusableAborter();
+
+// Get the current signal
+const signal = aborter.signal;
+
+// Attach listeners
+signal.addEventListener('abort', () => console.log('Listener 1'));
+signal.addEventListener('abort', () => console.log('Listener 2'), { once: true }); // won't be recovered
+
+// Set onabort handler
+signal.onabort = () => console.log('Onabort handler');
+
+// First abort
+aborter.abort('First reason');
+// Output:
+// Listener 1
+// Listener 2 (once)
+// Onabort handler
+
+// The signal is now a fresh one, but the non‑once listeners and onabort are reattached
+signal.addEventListener('abort', () => console.log('Listener 3')); // new listener, will survive next abort
+
+// Second abort
+aborter.abort('Second reason');
+// Output:
+// Listener 1
+// Onabort handler
+// Listener 3
 ```
 
 ## 📋 License
