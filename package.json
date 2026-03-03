@@ -47,9 +47,9 @@
     "verify:prettier": "npx prettier . --check",
     "verify:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --max-warnings=0",
     "verify": "npm run typecheck && npm run verify:prettier && npm run verify:eslint",
-    "fix:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --fix",
-    "fix:prettier": "npx prettier --write .",
-    "fix": "npm run fix:eslint && npm run fix:prettier",
+    "format:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --fix",
+    "format:prettier": "npx prettier --write .",
+    "format": "npm run fix:eslint && npm run fix:prettier",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -84,10 +84,10 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npm run fix:prettier"
+      "npm run format:prettier"
     ],
     "*.{json,md}": [
-      "npm run fix:prettier"
+      "npm run format:prettier"
     ]
   }
 }
