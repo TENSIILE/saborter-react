@@ -1,8 +1,17 @@
 ![Logo](./assets/logo.png)
 
-[![Npm package](https://img.shields.io/npm/v/@saborter/react?color=red&label=npm%20package)](https://www.npmjs.com/package/@saborter/react)
-[![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
-[![Github](https://img.shields.io/badge/repository-github-color)](https://github.com/TENSIILE/@saborter/react)
+<p  align='center'>
+<a href="https://www.npmjs.com/package/@saborter/react" alt="Npm package">
+        <img src="https://img.shields.io/npm/v/@saborter/react?color=red&label=npm%20package" /></a>
+<a href="https://www.npmjs.com/package/@saborter/react" alt="Npm downloads">
+        <img src="https://img.shields.io/npm/dm/@saborter/react.svg" /></a>
+<a href="https://github.com/TENSIILE/saborter-react/actions/workflows/publish.yml" alt="Release">
+        <img src="https://github.com/TENSIILE/saborter-react/actions/workflows/publish.yml/badge.svg" /></a>
+<a href="https://github.com/TENSIILE/saborter-react/blob/develop/LICENSE" alt="License">
+        <img src="https://img.shields.io/badge/license-MIT-blue" /></a>
+<a href="https://github.com/TENSIILE/saborter-react" alt="Github">
+        <img src="https://img.shields.io/badge/repository-github-color" /></a>
+</p>
 
 A library for canceling asynchronous requests that combines the `Saborter` library and `React`.
 
