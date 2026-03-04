@@ -1,6 +1,6 @@
 {
   "name": "@saborter/react",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A library for canceling asynchronous requests with React integration",
   "type": "module",
   "publishConfig": {
@@ -47,9 +47,9 @@
     "verify:prettier": "npx prettier . --check",
     "verify:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --max-warnings=0",
     "verify": "npm run typecheck && npm run verify:prettier && npm run verify:eslint",
-    "fix:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --fix",
-    "fix:prettier": "npx prettier --write .",
-    "fix": "npm run fix:eslint && npm run fix:prettier",
+    "format:eslint": "npx eslint \"./**/*.{js,jsx,ts,tsx}\" --fix",
+    "format:prettier": "npx prettier --write .",
+    "format": "npm run format:eslint && npm run format:prettier",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -71,7 +71,7 @@
     "prettier": "^3.7.4",
     "react": "^17.0.2",
     "rimraf": "^6.1.2",
-    "saborter": "^1.4.2",
+    "saborter": "^2.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vite": "^7.3.0",
@@ -80,14 +80,14 @@
   },
   "peerDependencies": {
     "react": ">=17.0.0 <=20.0.0",
-    "saborter": "^1.4.2"
+    "saborter": "^2.0.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npm run fix:prettier"
+      "npm run format:prettier"
     ],
     "*.{json,md}": [
-      "npm run fix:prettier"
+      "npm run format:prettier"
     ]
   }
 }
