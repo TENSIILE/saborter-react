@@ -287,13 +287,13 @@ const Component = () => {
 
 ### Request interruption when unmounting a component with an external `aborter`
 
-If you have an `aborter` instance that was created behind a component, for example, in a parent component, but you want to abort the request when the child is unmounted, you can use the `useUnmount` hook.
+If you have an `aborter` instance that was created behind a component, for example, in a parent component, but you want to abort the request when the child is unmounted, you can use the `useAbortWhenUnmount` hook.
 
 ```tsx
-import { useAborter, useUnmount } from '@saborter/react';
+import { useAborter, useAbortWhenUnmount } from '@saborter/react';
 
 const Child = ({ aborter }) => {
-  useUnmount(aborter);
+  useAbortWhenUnmount(aborter);
 
   return <div>Child component</div>;
 }
