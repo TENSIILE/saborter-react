@@ -1,10 +1,26 @@
 import { Aborter } from 'saborter';
-import { OnAbortCallback, OnStateChangeCallback, RequestState, AbortInitiator as Initiator } from 'saborter/types';
+import { AbortError as AbortErrorImpl } from 'saborter/errors';
+import { OnStateChangeCallback, RequestState, AbortInitiator as Initiator } from 'saborter/types';
 import { ABORTABLE_UNMOUNTED_INITIATOR } from './use-aborter.constants';
+
+/**
+ * When the error is triggered by a `timeout`, it means that automatic request cancellation was configured and the cancellation was successful.
+
+  When the error is triggered by the `user`, it means that the user interrupted the request by calling the `abort()` method.
+
+  When the error is triggered by the `system`, it means that you caught an error canceling a previous request.
+
+  When the error is triggered by the `component-unmounted`, it means that the request was interrupted because the component in which the hook was initialized was unmounted.
+ */
+export type AbortInitiator = Initiator | typeof ABORTABLE_UNMOUNTED_INITIATOR;
+
+interface AbortError extends AbortErrorImpl {
+  initiator?: AbortInitiator;
+}
 
 export interface UseAborterResult {
   /**
-   * `Aborter` class instance
+   * `Aborter` class instance.
    */
   aborter: Aborter;
   /**
@@ -20,6 +36,10 @@ export interface UseAborterResult {
       @default null
    */
   requestState: RequestState | null;
+  /**
+   * a status indicating that the request is still being processed.
+   */
+  loading: boolean;
 }
 
 export interface UseAborterProps {
@@ -28,7 +48,7 @@ export interface UseAborterProps {
     Associated with EventListener.onabort.
     It can be overridden via `aborter.listeners.onabort`
   */
-  onAbort?: OnAbortCallback;
+  onAbort?: (error: AbortError) => void;
   /**
     A function called when the request state changes.
     It takes the new state as an argument.
@@ -42,14 +62,3 @@ export interface UseAborterProps {
   */
   dispose?: boolean;
 }
-
-/**
- * When the error is triggered by a `timeout`, it means that automatic request cancellation was configured and the cancellation was successful.
-
-  When the error is triggered by the `user`, it means that the user interrupted the request by calling the abort() method.
-
-  When the error is triggered by the `system`, it means that you caught an error canceling a previous request.
-
-  When the error is triggered by the `component-unmounted`, it means that the request was interrupted because the component in which the hook was initialized was unmounted.
- */
-export type AbortInitiator = Initiator | typeof ABORTABLE_UNMOUNTED_INITIATOR;
