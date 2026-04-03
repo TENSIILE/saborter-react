@@ -49,7 +49,16 @@ export default defineConfig({
       }
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'saborter',
+        'saborter/errors',
+        'saborter/lib',
+        'saborter/dev',
+        'saborter/types'
+      ],
       output: {
         preserveModules: false,
         preserveModulesRoot: 'src',
