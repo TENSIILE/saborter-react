@@ -7,13 +7,15 @@
         <img src="https://img.shields.io/npm/dm/@saborter/react.svg" /></a>
 <a href="https://github.com/TENSIILE/saborter-react/actions/workflows/publish.yml" alt="Release">
         <img src="https://github.com/TENSIILE/saborter-react/actions/workflows/publish.yml/badge.svg" /></a>
+<a href="https://github.com/TENSIILE/saborter-react/actions/workflows/ci.yml" alt="CI">
+        <img src="https://github.com/TENSIILE/saborter-react/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://github.com/TENSIILE/saborter-react/blob/develop/LICENSE" alt="License">
         <img src="https://img.shields.io/badge/license-MIT-blue" /></a>
 <a href="https://github.com/TENSIILE/saborter-react" alt="Github">
         <img src="https://img.shields.io/badge/repository-github-color" /></a>
 </p>
 
-A library for canceling asynchronous requests that combines the `Saborter` library and `React`.
+A library for canceling asynchronous requests that combines the [Saborter](https://github.com/TENSIILE/saborter) library and [React](https://github.com/facebook/react).
 
 ## 📚 Documentation
 
@@ -29,9 +31,9 @@ The documentation is divided into several sections:
 ## 📦 Installation
 
 ```bash
-npm install @saborter/react
+npm install saborter @saborter/react
 # or
-yarn add @saborter/react
+yarn add saborter @saborter/react
 ```
 
 ## 📖 Possibilities
@@ -70,7 +72,7 @@ const Component = () => {
 #### Props
 
 ```typescript
-const { aborter } = new useAborter(props?: UseAborterProps);
+const { aborter } = useAborter(props?: UseAborterProps);
 ```
 
 #### Props Parameters
@@ -141,7 +143,7 @@ console.log(requestState); // 'cancelled' / 'pending' / 'fulfilled' / 'rejected'
 
 ```typescript
 // The type can be found in `saborter/types`
-const reusableAborter = new useReusableAborter(props?: ReusableAborterProps);
+const reusableAborter = useReusableAborter(props?: ReusableAborterProps);
 ```
 
 #### Props Parameters
@@ -198,15 +200,15 @@ Immediately cancels the currently executing request.
 
 ```javascript
 import { useState } from 'react';
-import { AbortError } from 'saborter';
+import { AbortError } from 'saborter/errors';
 import { useAborter } from '@saborter/react';
 
 const Component = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-
   // Create an Aborter instance via the hook
   const { aborter } = useAborter();
+
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Use for the request
   const fetchData = async () => {
@@ -216,7 +218,8 @@ const Component = () => {
       setUser(user);
     } catch (error) {
       if (error instanceof AbortError) {
-        // An abort error will occur either when the `aborter.abort()` method is called or when the component is unmounted.
+        // An abort error will occur either when the `aborter.abort()` method is called
+        // or when the component is unmounted.
         console.error('Abort error:', error);
       }
       console.error('Request error:', error);
@@ -229,58 +232,142 @@ const Component = () => {
 };
 ```
 
-### The `AbortError` `initiator` changed while unmounting the component
+### Using internal `loading` state
 
 ```javascript
-import { AbortError } from 'saborter';
+import { useState } from 'react';
+import { AbortError } from 'saborter/errors';
 import { useAborter } from '@saborter/react';
 
 const Component = () => {
-  const { aborter } = useAborter();
+  // Create an Aborter instance via the hook
+  const { aborter, loading } = useAborter();
 
+  const [user, setUser] = useState(null);
+
+  // Use for the request
   const fetchData = async () => {
     try {
       const user = await aborter.try((signal) => fetch('/api/user', { signal }));
+      setUser(user);
     } catch (error) {
       if (error instanceof AbortError) {
-        console.error('Abort error initiator:', error.initiator); // 'component-unmounted';
+        // An abort error will occur either when the `aborter.abort()` method is called
+        // or when the component is unmounted.
+        console.error('Abort error:', error);
+      }
+      console.error('Request error:', error);
+    }
+  };
+
+  return <h1>{loading ? 'Loading...' : user.fullname}</h1>;
+};
+```
+
+### The `AbortError` `initiator` changed while unmounting the component
+
+```javascript
+import { AbortError } from 'saborter/errors';
+import { useAborter } from '@saborter/react';
+
+const Component = () => {
+  const { aborter } = useAborter({
+    onAbort: (error) => {
+      if (error.type === 'aborted' && error.initiator === 'component-unmounted') {
+        console.log('Component is unmounted!');
+      }
+    }
+  });
+
+  const fetchData = async () => {
+    const user = await aborter.try((signal) => fetch('/api/user', { signal }));
+  };
+};
+```
+
+### Request interruption when unmounting a component with an external `aborter`
+
+If you have an `aborter` instance that was created behind a component, for example, in a parent component, but you want to abort the request when the child is unmounted, you can use the `useUnmount` hook.
+
+```tsx
+import { useAborter, useUnmount } from '@saborter/react';
+
+const Child = ({ aborter }) => {
+  useUnmount(aborter);
+
+  return <div>Child component</div>;
+}
+
+const Parent = () => {
+  const { aborter } = useAborter();
+
+  // Use for the request
+  const fetchData = async () => {
+    try {
+      const user = await aborter.try((signal) => fetch('/api/user', { signal }));
+      setUser(user);
+    } catch (error) {
+      if (error instanceof AbortError && error.initiator === 'component-unmounted') {
+        // handling request interruption due to component unmounting
       }
     }
   };
+
+  return (
+    <div>
+      Parent Component
+      <Child aborter={aborter}>
+    </div>
+  );
 };
 ```
 
 ### Using `useReusableAborter`
 
-```typescript
-const aborter = new useReusableAborter();
+```tsx
+import { useEffect } from 'react';
+import { useReusableAborter } from '@saborter/react';
 
-// Get the current signal
-const signal = aborter.signal;
+const Component = () => {
+  const aborter = useReusableAborter();
 
-// Attach listeners
-signal.addEventListener('abort', () => console.log('Listener 1'));
-signal.addEventListener('abort', () => console.log('Listener 2'), { once: true }); // won't be recovered
+  useEffect(() => {
+    // Attach listeners
+    aborter.signal.addEventListener('abort', () => console.log('Listener 1'));
+    aborter.signal.addEventListener('abort', () => console.log('Listener 2'), { once: true }); // won't be recovered
 
-// Set onabort handler
-signal.onabort = () => console.log('Onabort handler');
+    // Set onabort handler
+    aborter.signal.onabort = () => console.log('Onabort handler');
+  }, []);
 
-// First abort
-aborter.abort('First reason');
-// Output:
-// Listener 1
-// Listener 2 (once)
-// Onabort handler
+  const handleFirstClick = () => {
+    // First abort
+    aborter.abort('First reason');
+    // Output:
+    // Listener 1
+    // Listener 2 (once)
+    // Onabort handler
 
-// The signal is now a fresh one, but the non‑once listeners and onabort are reattached
-signal.addEventListener('abort', () => console.log('Listener 3')); // new listener, will survive next abort
+    // The signal is now a fresh one, but the non‑once listeners and onabort are reattached
+    aborter.signal.addEventListener('abort', () => console.log('Listener 3')); // new listener, will survive next abort
+  };
 
-// Second abort
-aborter.abort('Second reason');
-// Output:
-// Listener 1
-// Onabort handler
-// Listener 3
+  const handleSecondClick = () => {
+    // Second abort
+    aborter.abort('Second reason');
+    // Output:
+    // Listener 1
+    // Onabort handler
+    // Listener 3
+  };
+
+  return (
+    <div>
+      <button onClick={handleFirstClick}>First abort</button>
+      <button onClick={handleSecondClick}>Second abort</button>
+    </div>
+  );
+};
 ```
 
 ## 📋 License
