@@ -1,10 +1,9 @@
 import { useRef, useEffect, useState } from 'react';
 import { Aborter } from 'saborter';
-import { AbortError } from 'saborter/errors';
 import { RequestState } from 'saborter/types';
 import { dispose as disposeFn } from 'saborter/lib';
 import * as Shared from '../../shared';
-import * as Constants from './use-aborter.constants';
+import { createAbortableUnmountError } from './use-aborter.utils';
 import * as Types from './use-aborter.types';
 
 export const useAborter = (props: Types.UseAborterProps = {}): Types.UseAborterResult => {
@@ -12,6 +11,7 @@ export const useAborter = (props: Types.UseAborterProps = {}): Types.UseAborterR
 
   const aborterRef = useRef(new Aborter({ onAbort: onAbort as any, onStateChange }));
   const [requestState, setRequestState] = useState<RequestState | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const isDisposeEnabledRef = Shared.Hooks.useMutableRef(dispose);
 
@@ -19,21 +19,24 @@ export const useAborter = (props: Types.UseAborterProps = {}): Types.UseAborterR
     const currentAborter = aborterRef.current;
     const isDisposeEnabledCurrent = isDisposeEnabledRef.current;
 
-    const unsubscribe = currentAborter.listeners.state.subscribe(setRequestState);
+    const unsubscribeRequestState = currentAborter.listeners.state.subscribe(setRequestState);
+
+    const unsubscribeLoading = currentAborter.listeners.state.subscribe((state) => {
+      setLoading(state === 'pending');
+    });
 
     return () => {
-      unsubscribe();
-      currentAborter.abort(
-        new AbortError(Constants.ABORTED_SIGNAL_WITHOUT_MESSAGE, {
-          type: 'aborted',
-          initiator: Constants.ABORTABLE_UNMOUNTED_INITIATOR
-        })
-      );
+      unsubscribeRequestState();
+      unsubscribeLoading();
+
+      const unmountAbortError = createAbortableUnmountError();
+      currentAborter.abort(unmountAbortError);
+
       if (isDisposeEnabledCurrent) {
         disposeFn(currentAborter);
       }
     };
   }, [isDisposeEnabledRef]);
 
-  return { aborter: aborterRef.current, requestState };
+  return { aborter: aborterRef.current, requestState, loading };
 };
